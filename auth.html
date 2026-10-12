@@ -6,7 +6,7 @@
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://alcdn.msauth.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://login.microsoftonline.com https://graph.microsoft.com; frame-src https://login.microsoftonline.com;">
   <title>Connexion Microsoft — CORBE49 Transfert Outlook vers Teams</title>
-  <script src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
+  <script src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js" onload="window.msalLibraryLoaded=true" onerror="window.msalLibraryFailed=true"></script>
   <style>
     body { font-family: Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 18px; color: #202124; }
     h1 { color: #b5121b; }
@@ -35,11 +35,12 @@
       var loginButton = document.getElementById("login");
       var logoutButton = document.getElementById("logout");
       var msalApp;
-
       function show(message) { status.textContent = message; }
 
       if (!window.msal || !window.msal.PublicClientApplication) {
-        show("La bibliothèque de connexion Microsoft n'a pas pu être chargée. Vérifie la connexion Internet, puis recharge la page.");
+        show(window.msalLibraryFailed
+          ? "La bibliothèque Microsoft n'a pas pu être téléchargée depuis le CDN. Vérifie le réseau ou le filtrage web."
+          : "La bibliothèque Microsoft n'est pas disponible dans la page. Le script externe ne s'est peut-être pas chargé.");
         return;
       }
 
@@ -60,9 +61,15 @@
         show("Connexion Microsoft réussie.\nCompte : " + (account.username || account.name || "compte connecté") + "\n\nCette étape valide uniquement l'authentification. L'envoi vers Teams n'est pas encore activé.");
       }
 
-      Promise.resolve(typeof msalApp.initialize === "function" ? msalApp.initialize() : undefined)
-        .then(function () { return msalApp.handleRedirectPromise(); })
-        .then(function (result) {
+      var startup = Promise.resolve(typeof msalApp.initialize === "function" ? msalApp.initialize() : undefined)
+        .then(function () { return msalApp.handleRedirectPromise(); });
+
+      var watchdog = window.setTimeout(function () {
+        show("L'initialisation prend trop de temps. La bibliothèque Microsoft est chargée, mais son démarrage ne répond pas. Recharge avec Ctrl + F5. Si cela recommence, envoie-moi cette capture.");
+      }, 10000);
+
+      startup.then(function (result) {
+          window.clearTimeout(watchdog);
           var account = result && result.account;
           if (!account) {
             var accounts = msalApp.getAllAccounts();
@@ -78,9 +85,10 @@
           }
         })
         .catch(function (error) {
+          window.clearTimeout(watchdog);
           loginButton.disabled = false;
           loginButton.textContent = "Réessayer la connexion";
-          show("La connexion n'a pas abouti.\n" + (error && error.message ? error.message : String(error)) + "\n\nSi Microsoft signale une erreur de redirection, vérifie que l'URI SPA dans Entra est exactement :\n" + REDIRECT_URI);
+          show("La connexion n'a pas abouti.\n" + (error && error.message ? error.message : String(error)) + "\n\nURI de redirection attendue :\n" + REDIRECT_URI);
         });
 
       loginButton.addEventListener("click", function () {
