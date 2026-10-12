@@ -46,7 +46,6 @@
       <Hosts>
         <Host xsi:type="MailHost">
           <MobileFormFactor>
-            <FunctionFile resid="Commands.Url"/>
             <ExtensionPoint xsi:type="MobileMessageReadCommandSurface">
               <Group id="CORBE49.TeamsTransfer.MobileGroup">
                 <Label resid="Group.Label"/>
