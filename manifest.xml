@@ -47,28 +47,7 @@
         <Host xsi:type="MailHost">
           <DesktopFormFactor>
             <FunctionFile resid="Commands.Url"/>
-            <ExtensionPoint xsi:type="MessageReadCommandSurface">
-              <OfficeTab id="TabDefault">
-                <Group id="CORBE49.TeamsTransfer.Group">
-                  <Label resid="Group.Label"/>
-                  <Control xsi:type="Button" id="CORBE49.TeamsTransfer.Open">
-                    <Label resid="Button.Label"/>
-                    <Supertip>
-                      <Title resid="Button.Label"/>
-                      <Description resid="Button.Description"/>
-                    </Supertip>
-                    <Icon>
-                      <bt:Image size="16" resid="Icon.16"/>
-                      <bt:Image size="32" resid="Icon.32"/>
-                      <bt:Image size="80" resid="Icon.80"/>
-                    </Icon>
-                    <Action xsi:type="ShowTaskpane">
-                      <SourceLocation resid="Taskpane.Url"/>
-                    </Action>
-                  </Control>
-                </Group>
-              </OfficeTab>
-            </ExtensionPoint>
+
           </DesktopFormFactor>
           <MobileFormFactor>
             <FunctionFile resid="Commands.Url"/>
