@@ -4,13 +4,96 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://alcdn.msauth.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://login.microsoftonline.com https://graph.microsoft.com; frame-src https://login.microsoftonline.com;">
   <title>Connexion Microsoft — CORBE49 Transfert Outlook vers Teams</title>
+  <script src="https://alcdn.msauth.net/browser/3.28.1/js/msal-browser.min.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 18px; color: #202124; }
+    h1 { color: #b5121b; }
+    button { padding: 11px 16px; border: 0; border-radius: 5px; background: #b5121b; color: white; font-size: 16px; cursor: pointer; }
+    button:disabled { opacity: .55; cursor: wait; }
+    #status { margin-top: 18px; padding: 12px; background: #f3f3f3; border-radius: 5px; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .note { color: #555; line-height: 1.5; }
+  </style>
 </head>
 <body>
   <main>
     <h1>Connexion Microsoft</h1>
-    <p>Cette page est le point de retour prévu pour l’authentification Microsoft du complément CORBE49.</p>
-    <p>L’authentification n’est pas encore activée. Ne saisis pas de mot de passe sur cette page tant que le flux Microsoft n’a pas été configuré et validé.</p>
+    <p>Cette page vérifie la connexion Microsoft pour le complément CORBE49 Transfert Outlook vers Teams.</p>
+    <p class="note">Aucun mot de passe n'est demandé sur cette page. La connexion et le mot de passe sont gérés directement par Microsoft. Aucun secret d'application n'est utilisé dans ce site.</p>
+    <button id="login" type="button" disabled>Chargement…</button>
+    <button id="logout" type="button" hidden>Se déconnecter</button>
+    <div id="status" role="status" aria-live="polite">Initialisation de la connexion…</div>
   </main>
+  <script>
+    (function () {
+      "use strict";
+      var CLIENT_ID = "41d79a73-3bbc-47b3-a307-6edb15af1d47";
+      var TENANT_ID = "75b354dc-0810-4caa-90a3-ac64ef88c77a";
+      var REDIRECT_URI = "https://xaviouk.github.io/corbe49-outlook-teams-mobile/auth.html";
+      var status = document.getElementById("status");
+      var loginButton = document.getElementById("login");
+      var logoutButton = document.getElementById("logout");
+      var msalApp;
+
+      function show(message) { status.textContent = message; }
+
+      if (!window.msal || !window.msal.PublicClientApplication) {
+        show("La bibliothèque de connexion Microsoft n'a pas pu être chargée. Vérifie la connexion Internet, puis recharge la page.");
+        return;
+      }
+
+      msalApp = new msal.PublicClientApplication({
+        auth: {
+          clientId: CLIENT_ID,
+          authority: "https://login.microsoftonline.com/" + TENANT_ID,
+          redirectUri: REDIRECT_URI,
+          postLogoutRedirectUri: REDIRECT_URI,
+          navigateToLoginRequestUrl: false
+        },
+        cache: { cacheLocation: "sessionStorage" }
+      });
+
+      function showAccount(account) {
+        loginButton.hidden = true;
+        logoutButton.hidden = false;
+        show("Connexion Microsoft réussie.\nCompte : " + (account.username || account.name || "compte connecté") + "\n\nCette étape valide uniquement l'authentification. L'envoi vers Teams n'est pas encore activé.");
+      }
+
+      msalApp.initialize()
+        .then(function () { return msalApp.handleRedirectPromise(); })
+        .then(function (result) {
+          var account = result && result.account;
+          if (!account) {
+            var accounts = msalApp.getAllAccounts();
+            account = accounts.length ? accounts[0] : null;
+          }
+          if (account) {
+            msalApp.setActiveAccount(account);
+            showAccount(account);
+          } else {
+            loginButton.disabled = false;
+            loginButton.textContent = "Se connecter avec Microsoft";
+            show("Prêt. Clique sur « Se connecter avec Microsoft » pour tester la connexion.");
+          }
+        })
+        .catch(function (error) {
+          loginButton.disabled = false;
+          loginButton.textContent = "Réessayer la connexion";
+          show("La connexion n'a pas abouti.\n" + (error && error.message ? error.message : String(error)) + "\n\nSi Microsoft signale une erreur de redirection, vérifie que l'URI SPA dans Entra est exactement :\n" + REDIRECT_URI);
+        });
+
+      loginButton.addEventListener("click", function () {
+        loginButton.disabled = true;
+        show("Redirection vers la page de connexion Microsoft…");
+        msalApp.loginRedirect({ scopes: ["openid", "profile", "email", "User.Read"] });
+      });
+
+      logoutButton.addEventListener("click", function () {
+        var account = msalApp.getActiveAccount();
+        msalApp.logoutRedirect({ account: account, postLogoutRedirectUri: REDIRECT_URI });
+      });
+    })();
+  </script>
 </body>
 </html>
