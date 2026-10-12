@@ -45,10 +45,6 @@
       </Requirements>
       <Hosts>
         <Host xsi:type="MailHost">
-          <DesktopFormFactor>
-            <FunctionFile resid="Commands.Url"/>
-
-          </DesktopFormFactor>
           <MobileFormFactor>
             <FunctionFile resid="Commands.Url"/>
             <ExtensionPoint xsi:type="MobileMessageReadCommandSurface">
