@@ -6,7 +6,7 @@
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://alcdn.msauth.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://login.microsoftonline.com https://graph.microsoft.com; frame-src https://login.microsoftonline.com;">
   <title>Connexion Microsoft — CORBE49 Transfert Outlook vers Teams</title>
-  <script src="https://alcdn.msauth.net/browser/3.28.1/js/msal-browser.min.js"></script>
+  <script src="https://alcdn.msauth.net/browser/2.35.0/js/msal-browser.min.js"></script>
   <style>
     body { font-family: Arial, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 18px; color: #202124; }
     h1 { color: #b5121b; }
@@ -60,7 +60,7 @@
         show("Connexion Microsoft réussie.\nCompte : " + (account.username || account.name || "compte connecté") + "\n\nCette étape valide uniquement l'authentification. L'envoi vers Teams n'est pas encore activé.");
       }
 
-      msalApp.initialize()
+      Promise.resolve(typeof msalApp.initialize === "function" ? msalApp.initialize() : undefined)
         .then(function () { return msalApp.handleRedirectPromise(); })
         .then(function (result) {
           var account = result && result.account;
