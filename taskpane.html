@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://appsforoffice.microsoft.com; script-src 'self' https://appsforoffice.microsoft.com; style-src 'self'; img-src 'self' https: data:; connect-src 'self' https://graph.microsoft.com https://login.microsoftonline.com;">
+  <title>CORBE49 — Transfert Outlook vers Teams</title>
+  <link rel="stylesheet" href="taskpane.css">
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <script defer src="taskpane.js"></script>
+</head>
+<body>
+  <main class="app">
+    <header class="brand">
+      <div class="brand-mark" aria-hidden="true">C49</div>
+      <div>
+        <p class="eyebrow">CORBE49</p>
+        <h1>Transfert vers Teams</h1>
+      </div>
+    </header>
+
+    <section class="mail-card" aria-labelledby="mail-title">
+      <div class="section-heading">
+        <h2 id="mail-title">E-mail sélectionné</h2>
+        <span id="mail-state" class="status">Lecture du message…</span>
+      </div>
+      <dl class="mail-details">
+        <dt>Objet</dt><dd id="mail-subject">—</dd>
+        <dt>Expéditeur</dt><dd id="mail-from">—</dd>
+        <dt>Pièces jointes</dt><dd id="mail-attachments">—</dd>
+      </dl>
+      <details>
+        <summary>Aperçu du contenu</summary>
+        <div id="mail-body" class="mail-body">Le contenu du message apparaîtra ici lorsque Outlook l'autorisera.</div>
+      </details>
+    </section>
+
+    <section class="destination-card" aria-labelledby="destination-title">
+      <h2 id="destination-title">Destination Teams</h2>
+      <p class="muted">Tu pourras choisir une conversation existante ou démarrer une nouvelle discussion.</p>
+      <label for="destination-mode">Action</label>
+      <select id="destination-mode" disabled>
+        <option value="existing">Choisir une discussion existante</option>
+        <option value="new">Créer une nouvelle discussion</option>
+      </select>
+      <label for="people">Collègue(s) ou conversation</label>
+      <input id="people" type="text" placeholder="La recherche sera disponible après connexion Microsoft" disabled>
+      <label for="comment">Message d'accompagnement (facultatif)</label>
+      <textarea id="comment" rows="3" placeholder="Ex. : Peux-tu regarder ce point ?" disabled></textarea>
+      <button id="send-button" type="button" disabled>Transférer vers Teams</button>
+      <p id="setup-note" class="notice" role="status">Configuration Microsoft Entra et autorisations Teams à effectuer avant l'envoi.</p>
+    </section>
+
+    <footer>Version initiale — l'envoi est volontairement désactivé tant que l'authentification et les autorisations ne sont pas configurées.</footer>
+  </main>
+</body>
+</html>
