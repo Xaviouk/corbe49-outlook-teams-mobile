@@ -3,55 +3,48 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://appsforoffice.microsoft.com; script-src 'self' https://appsforoffice.microsoft.com; style-src 'self'; img-src 'self' https: data:; connect-src 'self' https://graph.microsoft.com https://login.microsoftonline.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://appsforoffice.microsoft.com; script-src 'self' https://appsforoffice.microsoft.com https://alcdn.msauth.net; style-src 'self'; img-src 'self' https: data:; connect-src 'self' https://graph.microsoft.com https://login.microsoftonline.com;">
   <title>CORBE49 — Transfert Outlook vers Teams</title>
   <link rel="stylesheet" href="taskpane.css">
   <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <script src="https://alcdn.msauth.net/browser/4.25.0/js/msal-browser.min.js"></script>
   <script defer src="taskpane.js"></script>
 </head>
 <body>
   <main class="app">
     <header class="brand">
       <div class="brand-mark" aria-hidden="true">C49</div>
-      <div>
-        <p class="eyebrow">CORBE49</p>
-        <h1>Transfert vers Teams</h1>
-      </div>
+      <div><p class="eyebrow">CORBE49</p><h1>Transfert vers Teams</h1></div>
     </header>
-
     <section class="mail-card" aria-labelledby="mail-title">
-      <div class="section-heading">
-        <h2 id="mail-title">E-mail sélectionné</h2>
-        <span id="mail-state" class="status">Lecture du message…</span>
-      </div>
+      <div class="section-heading"><h2 id="mail-title">E-mail sélectionné</h2><span id="mail-state" class="status">Lecture du message…</span></div>
       <dl class="mail-details">
         <dt>Objet</dt><dd id="mail-subject">—</dd>
         <dt>Expéditeur</dt><dd id="mail-from">—</dd>
         <dt>Pièces jointes</dt><dd id="mail-attachments">—</dd>
       </dl>
-      <details>
-        <summary>Aperçu du contenu</summary>
-        <div id="mail-body" class="mail-body">Le contenu du message apparaîtra ici lorsque Outlook l'autorisera.</div>
-      </details>
+      <details><summary>Aperçu du contenu</summary><div id="mail-body" class="mail-body">Le contenu du message apparaîtra ici lorsque Outlook l'autorisera.</div></details>
     </section>
-
     <section class="destination-card" aria-labelledby="destination-title">
       <h2 id="destination-title">Destination Teams</h2>
-      <p class="muted">Tu pourras choisir une conversation existante ou démarrer une nouvelle discussion.</p>
-      <label for="destination-mode">Action</label>
+      <p class="muted">Cette étape vérifie l'accès à tes conversations. L'envoi reste désactivé pour le moment.</p>
+      <p id="auth-state" class="muted">Non connecté depuis le complément</p>
+      <button id="connect-button" type="button">Se connecter à Teams</button>
+      <label for="destination-mode">Action envisagée</label>
       <select id="destination-mode" disabled>
         <option value="existing">Choisir une discussion existante</option>
-        <option value="new">Créer une nouvelle discussion</option>
+        <option value="new">Préparer une nouvelle discussion</option>
       </select>
-      <label for="people">Collègue(s) ou conversation</label>
-      <input id="people" type="text" placeholder="La recherche sera disponible après connexion Microsoft" disabled>
+      <label for="chat-select">Conversation existante</label>
+      <select id="chat-select" disabled><option value="">Connecte-toi pour charger les conversations</option></select>
+      <label for="people">Participants (pour une nouvelle discussion)</label>
+      <input id="people" type="text" placeholder="Adresses e-mail séparées par des points-virgules" disabled hidden>
       <label for="comment">Message d'accompagnement (facultatif)</label>
-      <textarea id="comment" rows="3" placeholder="Ex. : Peux-tu regarder ce point ?" disabled></textarea>
-      <button id="send-button" type="button" disabled>Transférer vers Teams</button>
-      <p id="setup-note" class="notice" role="status">Configuration Microsoft Entra et autorisations Teams à effectuer avant l'envoi.</p>
+      <textarea id="comment" rows="3" placeholder="Ex. : Peux-tu regarder ce point ?"></textarea>
+      <button id="send-button" type="button" disabled>Transférer vers Teams (pas encore activé)</button>
+      <p id="setup-note" class="notice" role="status">Aucun message ne sera envoyé pendant ce test.</p>
     </section>
-
-    <footer>Version initiale — l'envoi est volontairement désactivé tant que l'authentification et les autorisations ne sont pas configurées.</footer>
+    <footer>Prototype de connexion — aucun message envoyé. L'envoi et les pièces jointes seront ajoutés après validation dans Outlook mobile.</footer>
   </main>
 </body>
 </html>
