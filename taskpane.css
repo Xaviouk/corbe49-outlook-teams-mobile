@@ -1,0 +1,59 @@
+:root {
+  color-scheme: light;
+  --brand-red: #c62828;
+  --brand-dark: #252525;
+  --text: #242424;
+  --muted: #626262;
+  --border: #dedede;
+  --surface: #ffffff;
+  --soft: #f7f7f7;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--soft);
+  color: var(--text);
+  font: 15px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+}
+.app { max-width: 640px; margin: 0 auto; padding: 16px; }
+.brand { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.brand-mark {
+  display: grid; place-items: center; width: 48px; height: 48px;
+  border-radius: 12px; background: var(--brand-red); color: white;
+  font-weight: 800; letter-spacing: -1px;
+}
+.eyebrow { margin: 0; color: var(--brand-red); font-size: 11px; font-weight: 800; letter-spacing: .12em; }
+h1 { margin: 2px 0 0; font-size: 21px; line-height: 1.2; }
+h2 { margin: 0; font-size: 16px; }
+.mail-card, .destination-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px; margin-bottom: 14px;
+}
+.section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.status { color: var(--muted); font-size: 12px; text-align: right; }
+.mail-details { display: grid; grid-template-columns: 100px minmax(0, 1fr); gap: 8px 10px; margin: 16px 0; }
+dt { color: var(--muted); font-size: 13px; }
+dd { margin: 0; overflow-wrap: anywhere; }
+label { display: block; margin: 14px 0 6px; font-size: 13px; font-weight: 650; }
+input, select, textarea {
+  width: 100%; min-height: 42px; padding: 10px 11px; border: 1px solid #b8b8b8;
+  border-radius: 8px; background: white; color: var(--text); font: inherit;
+}
+textarea { resize: vertical; }
+button {
+  width: 100%; min-height: 46px; margin-top: 16px; border: 0; border-radius: 9px;
+  background: var(--brand-red); color: white; font: inherit; font-weight: 700;
+}
+button:disabled, input:disabled, select:disabled, textarea:disabled { opacity: .58; cursor: not-allowed; }
+.muted, footer { color: var(--muted); font-size: 13px; }
+.muted { margin: 7px 0 12px; }
+.notice { padding: 10px 12px; border-left: 3px solid var(--brand-red); background: #fff4f4; font-size: 12px; }
+details { border-top: 1px solid var(--border); padding-top: 12px; }
+summary { cursor: pointer; font-size: 13px; font-weight: 650; }
+.mail-body { max-height: 180px; overflow: auto; margin-top: 10px; overflow-wrap: anywhere; font-size: 13px; }
+footer { padding: 4px 2px 12px; }
+@media (max-width: 360px) {
+  .app { padding: 10px; }
+  .mail-card, .destination-card { padding: 12px; }
+  .mail-details { grid-template-columns: 82px minmax(0, 1fr); }
+}
